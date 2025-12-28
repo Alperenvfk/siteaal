@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultra Özür Mesajı</title>
+<style>
+body {
+  margin:0; padding:0;
+  font-family:'Segoe UI', sans-serif;
+  overflow:hidden;
+  background: linear-gradient(120deg, #ff9a9e, #fad0c4);
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center;
+  height:100vh;
+}
+
+.mesaj { display:block; font-size:2em; color:#fff; text-align:center; margin-bottom:30px; }
+
+button {
+  padding:15px 30px; margin:10px; font-size:1.2em;
+  border:none; border-radius:10px; cursor:pointer; transition:all 0.3s;
+}
+button:hover { transform: scale(1.1); }
+
+#affettim { background-color:#4CAF50; color:#fff; }
+#affetmedin { background-color:#f44336; color:#fff; }
+
+#fullscreen {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  display:none; justify-content:center; align-items:center;
+  flex-direction:column; overflow:hidden; z-index:1000;
+  background: linear-gradient(120deg, #a1c4fd, #c2e9fb);
+}
+
+#cornerName {
+  position:absolute; top:20px; right:20px; font-size:1.2em; color:#fff;
+  text-shadow:0 0 5px #000; z-index:1001;
+}
+
+#messageText {
+  font-size:2em; color:#fff; text-align:center; text-shadow:0 0 10px #000; padding:0 10px;
+}
+
+.confetti, .heart, .flower, .star { position:absolute; z-index:50; }
+
+.confetti { width:10px; height:10px; border-radius:50%; top:-10px; animation:fall 3s linear forwards; }
+@keyframes fall { 0% {transform:translateY(0) rotate(0deg);} 100% {transform:translateY(100vh) rotate(360deg);} }
+
+.heart { width:15px; height:15px; transform:rotate(45deg); background:red; clip-path: polygon(50% 0%,100% 35%,75% 100%,25% 100%,0 35%); animation:heartFall 4s linear forwards; }
+@keyframes heartFall { 0%{top:-20px;} 100%{top:100vh;} }
+
+.flower { width:20px; height:20px; border-radius:50%; animation:flowerPop 1s ease-out forwards; }
+@keyframes flowerPop { 0% {transform:scale(0) rotate(0deg); opacity:0;} 50%{transform:scale(1.2) rotate(180deg); opacity:1;} 100% {transform:scale(1) rotate(360deg);} }
+
+.star { width:5px; height:5px; background:yellow; clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); animation:starFall 4s linear forwards; }
+@keyframes starFall { 0%{top:-10px;} 100%{top:100vh;} }
+
+@media(max-width:600px){
+  .mesaj{font-size:1.5em;}
+  button{font-size:1em; padding:12px 20px;}
+  #messageText{font-size:1.8em;}
+}
+</style>
+</head>
+<body>
+<div class="mesaj" id="mainMessage">Özür dilerim reis 😔</div>
+
+<div id="butonlar">
+  <button id="affettim">Affettim mi?</button>
+  <button id="affetmedin">Affetmedin mi?</button>
+</div>
+
+<div id="fullscreen">
+  <div id="messageText">Umarım beni affetmişsindir 😔❤️</div>
+</div>
+
+<div id="cornerName">Alperen Mehmet</div>
+
+<script>
+const affettimBtn = document.getElementById("affettim");
+const affetmedinBtn = document.getElementById("affetmedin");
+const butonlar = document.getElementById("butonlar");
+const fullscreen = document.getElementById("fullscreen");
+let affetmedinSayisi = 0;
+let butonBasildi = false;
+
+// Sayfadan çıkmayı engelle
+window.onbeforeunload = function(e){
+  if(!butonBasildi){
+    e.preventDefault();
+    e.returnValue = "Hayır! Çıkamazsın, daha bitmedi 😈";
+  }
+};
+
+// Affetmedin butonu
+affetmedinBtn.addEventListener("click", ()=>{
+  affetmedinSayisi++;
+  let mevcutBoyut = parseFloat(window.getComputedStyle(affettimBtn).fontSize);
+  affettimBtn.style.fontSize = (mevcutBoyut + 8) + "px";
+  const renkler = ["#ff0","#f0f","#0ff","#fff","#ff4500"];
+  affettimBtn.style.backgroundColor = renkler[Math.floor(Math.random()*renkler.length)];
+  if(affetmedinSayisi >= 5) affetmedinBtn.style.display="none";
+});
+
+// Affettim butonu
+affettimBtn.addEventListener("click", ()=>{
+  butonBasildi = true;
+  // Eski mesaj kaybolsun
+  document.getElementById("mainMessage").style.display="none";
+  // Butonlar kaybolsun
+  butonlar.style.display = "none";
+  // Yeni ekran aç
+  fullscreen.style.display = "flex";
+
+  // Çiçekler
+  for(let i=0;i<30;i++){
+    const flower=document.createElement("div");
+    flower.classList.add("flower");
+    flower.style.left=Math.random()*window.innerWidth+"px";
+    flower.style.top=Math.random()*window.innerHeight+"px";
+    flower.style.background=`radial-gradient(circle, hsl(${Math.random()*360},70%,70%), hsl(${Math.random()*360},70%,50%))`;
+    fullscreen.appendChild(flower);
+    setTimeout(()=>flower.remove(),5000);
+  }
+
+  // Konfeti, kalp, yıldız
+  for(let i=0;i<50;i++){
+    const confetti=document.createElement("div");
+    confetti.classList.add("confetti");
+    confetti.style.left=Math.random()*window.innerWidth+"px";
+    confetti.style.backgroundColor=["#ff0","#f0f","#0ff","#fff","#ff4500","#ff69b4"][Math.floor(Math.random()*6)];
+    fullscreen.appendChild(confetti);
+    setTimeout(()=>confetti.remove(),4000);
+
+    const heart=document.createElement("div");
+    heart.classList.add("heart");
+    heart.style.left=Math.random()*window.innerWidth+"px";
+    fullscreen.appendChild(heart);
+    setTimeout(()=>heart.remove(),4000);
+
+    const star=document.createElement("div");
+    star.classList.add("star");
+    star.style.left=Math.random()*window.innerWidth+"px";
+    fullscreen.appendChild(star);
+    setTimeout(()=>star.remove(),4000);
+  }
+});
+</script>
+</body>
+</html>
